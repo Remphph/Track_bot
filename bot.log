@@ -17600,3 +17600,17 @@ connector: <aiohttp.connector.TCPConnector object at 0x000002B31FDEEE40>
 2025-03-20 20:19:12,648 - aiogram.event - INFO - Update id=77760926 is handled. Duration 366 ms by bot id=8097681158
 2025-03-20 20:19:40,463 - aiogram.dispatcher - INFO - Polling stopped
 2025-03-20 20:19:40,726 - aiogram.dispatcher - INFO - Polling stopped for bot @DriverTaskManager_bot id=8097681158 - 'DriverTaskManagerBot'
+2025-03-21 15:12:21,732 - __main__ - ERROR - Ошибка подключения к БД: no pg_hba.conf entry for host "185.117.151.183", user "postgres", database "transport_db", no encryption
+2025-03-21 15:30:07,298 - __main__ - ERROR - Ошибка подключения к БД: password authentication failed for user "postgres"
+2025-03-21 15:32:39,758 - __main__ - ERROR - Ошибка подключения к БД: password authentication failed for user "postgres"
+2025-03-21 15:33:17,221 - __main__ - ERROR - Ошибка подключения к БД: password authentication failed for user "postgres"
+2025-03-21 15:34:21,105 - __main__ - ERROR - Ошибка подключения к БД: password authentication failed for user "postgres"
+2025-03-21 15:35:33,039 - __main__ - ERROR - Ошибка подключения к БД: password authentication failed for user "transpost_tg"
+2025-03-21 16:10:03,396 - __main__ - ERROR - Ошибка подключения к БД: password authentication failed for user "postgres"
+2025-03-21 17:24:06,533 - __main__ - INFO - База данных подключена
+2025-03-21 17:24:07,644 - __main__ - INFO - Таблицы созданы
+2025-03-21 17:24:08,286 - aiogram.dispatcher - INFO - Start polling
+2025-03-21 17:24:08,450 - aiogram.dispatcher - INFO - Run polling for bot @DriverTaskManager_bot id=8097681158 - 'DriverTaskManagerBot'
+2025-03-21 17:24:31,128 - aiogram.event - INFO - Update id=77760927 is handled. Duration 1436 ms by bot id=8097681158
+2025-03-21 17:25:04,160 - aiogram.dispatcher - INFO - Polling stopped
+2025-03-21 17:25:04,413 - aiogram.dispatcher - INFO - Polling stopped for bot @DriverTaskManager_bot id=8097681158 - 'DriverTaskManagerBot'

@@ -20,18 +20,12 @@ logger = logging.getLogger(__name__)
 # Загрузка переменных окружения
 load_dotenv("Bot.env")
 
+import os
 
 class Config:
     BOT_TOKEN = os.getenv("BOT_TOKEN")
-    DB_CONFIG = {
-        "user": os.getenv("DB_USER"),
-        "password": os.getenv("DB_PASSWORD"),
-        "database": os.getenv("DB_NAME"),
-        "host": os.getenv("DB_HOST", "localhost"),
-        "port": int(os.getenv("DB_PORT", 5432))
-    }
+    DATABASE_URL = os.getenv("DATABASE_URL")  # Указываем ваш URL
     MANAGER_GROUP_ID = int(os.getenv("MANAGER_GROUP_ID"))
-
 
 bot = Bot(token=Config.BOT_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
@@ -58,16 +52,14 @@ PHONE_PATTERN = re.compile(r'^\+?[1-9]\d{9,14}$')  # Минимум 10 цифр 
 BOL_PATTERN = re.compile(r'^\d{8,12}$')
 
 
-# БД-функции
 async def init_db():
     global pool
     try:
-        pool = await asyncpg.create_pool(**Config.DB_CONFIG)
+        pool = await asyncpg.create_pool(dsn=Config.DATABASE_URL)
         logger.info("База данных подключена")
     except Exception as e:
         logger.error(f"Ошибка подключения к БД: {e}")
         raise
-
 
 async def execute(query: str, *args):
     async with pool.acquire() as conn:
