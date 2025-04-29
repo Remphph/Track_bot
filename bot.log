@@ -17614,3 +17614,366 @@ connector: <aiohttp.connector.TCPConnector object at 0x000002B31FDEEE40>
 2025-03-21 17:24:31,128 - aiogram.event - INFO - Update id=77760927 is handled. Duration 1436 ms by bot id=8097681158
 2025-03-21 17:25:04,160 - aiogram.dispatcher - INFO - Polling stopped
 2025-03-21 17:25:04,413 - aiogram.dispatcher - INFO - Polling stopped for bot @DriverTaskManager_bot id=8097681158 - 'DriverTaskManagerBot'
+2025-04-17 01:20:03,436 - __main__ - INFO - База данных подключена
+2025-04-17 01:20:04,423 - __main__ - INFO - Таблицы созданы
+2025-04-17 01:20:17,715 - aiogram.dispatcher - INFO - Start polling
+2025-04-17 01:20:17,840 - aiogram.dispatcher - INFO - Run polling for bot @FLEX_ELD_BOT id=7968006353 - 'FLEX_ELD'
+2025-04-17 01:20:25,661 - aiogram.event - INFO - Update id=451430379 is not handled. Duration 737 ms by bot id=7968006353
+2025-04-17 01:20:25,662 - aiogram.event - ERROR - Cause exception while process update id=451430379 by bot id=7968006353
+KeyError: 'language'
+Traceback (most recent call last):
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\bot.py", line 275, in cmd_start
+    lang = driver['language']
+           ~~~~~~^^^^^^^^^^^^
+KeyError: 'language'
+2025-04-17 01:24:30,209 - aiogram.dispatcher - INFO - Polling stopped
+2025-04-17 01:24:30,469 - aiogram.dispatcher - INFO - Polling stopped for bot @FLEX_ELD_BOT id=7968006353 - 'FLEX_ELD'
+2025-04-17 01:27:15,503 - __main__ - INFO - База данных подключена
+2025-04-17 01:27:16,478 - __main__ - INFO - Таблицы созданы
+2025-04-17 01:27:16,901 - aiogram.dispatcher - INFO - Start polling
+2025-04-17 01:27:17,015 - aiogram.dispatcher - INFO - Run polling for bot @FLEX_ELD_BOT id=7968006353 - 'FLEX_ELD'
+2025-04-17 01:27:31,519 - aiogram.event - INFO - Update id=451430380 is not handled. Duration 734 ms by bot id=7968006353
+2025-04-17 01:27:31,519 - aiogram.event - ERROR - Cause exception while process update id=451430380 by bot id=7968006353
+KeyError: 'language'
+Traceback (most recent call last):
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\bot.py", line 275, in cmd_start
+    lang = driver['language']
+           ~~~~~~^^^^^^^^^^^^
+KeyError: 'language'
+2025-04-17 01:31:02,192 - aiogram.dispatcher - INFO - Polling stopped
+2025-04-17 01:31:02,455 - aiogram.dispatcher - INFO - Polling stopped for bot @FLEX_ELD_BOT id=7968006353 - 'FLEX_ELD'
+2025-04-17 01:34:25,764 - __main__ - INFO - База данных подключена
+2025-04-17 01:34:26,732 - __main__ - INFO - Таблицы созданы
+2025-04-17 01:34:27,223 - aiogram.dispatcher - INFO - Start polling
+2025-04-17 01:34:27,346 - aiogram.dispatcher - INFO - Run polling for bot @FLEX_ELD_BOT id=7968006353 - 'FLEX_ELD'
+2025-04-17 01:34:44,178 - aiogram.event - INFO - Update id=451430381 is not handled. Duration 731 ms by bot id=7968006353
+2025-04-17 01:34:44,179 - aiogram.event - ERROR - Cause exception while process update id=451430381 by bot id=7968006353
+UndefinedColumnError: column "language" does not exist
+Traceback (most recent call last):
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\bot.py", line 735, in handle_unknown
+    lang = await get_driver_language(message.from_user.id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\bot.py", line 260, in get_driver_language
+    driver = await fetchrow("SELECT language FROM drivers WHERE driver_id = $1", driver_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\bot.py", line 175, in fetchrow
+    return await conn.fetchrow(query, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\asyncpg\connection.py", line 748, in fetchrow
+    data = await self._execute(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\asyncpg\connection.py", line 1864, in _execute
+    result, _ = await self.__execute(
+                ^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\asyncpg\connection.py", line 1961, in __execute
+    result, stmt = await self._do_execute(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\asyncpg\connection.py", line 2004, in _do_execute
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\asyncpg\connection.py", line 432, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "asyncpg\\protocol\\protocol.pyx", line 165, in prepare
+asyncpg.exceptions.UndefinedColumnError: column "language" does not exist
+2025-04-17 01:34:47,705 - __main__ - INFO - Driver data: <Record id=1 driver_id=1263471738 company='Re' full_name='Jdjd' phone='+1929199291' truck_number='818' created_at=datetime.datetime(2025, 3, 21, 19, 32, 27, 458621)>
+2025-04-17 01:34:48,207 - aiogram.event - INFO - Update id=451430382 is handled. Duration 1222 ms by bot id=7968006353
+2025-04-17 01:34:54,968 - aiogram.event - INFO - Update id=451430383 is not handled. Duration 487 ms by bot id=7968006353
+2025-04-17 01:34:54,968 - aiogram.event - ERROR - Cause exception while process update id=451430383 by bot id=7968006353
+KeyError: 'language'
+Traceback (most recent call last):
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\bot.py", line 320, in create_task
+    lang = driver['language']
+           ~~~~~~^^^^^^^^^^^^
+KeyError: 'language'
+2025-04-17 01:34:59,585 - aiogram.event - INFO - Update id=451430384 is not handled. Duration 480 ms by bot id=7968006353
+2025-04-17 01:34:59,586 - aiogram.event - ERROR - Cause exception while process update id=451430384 by bot id=7968006353
+KeyError: 'language'
+Traceback (most recent call last):
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 25, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 56, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 42, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 141, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        observer=observer, update_type=update_type, event=telegram_event, **data
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 43, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\aibek\PycharmProjects\PythonTGbot\bot.py", line 320, in create_task
+    lang = driver['language']
+           ~~~~~~^^^^^^^^^^^^
+KeyError: 'language'
+2025-04-17 01:41:27,861 - aiogram.dispatcher - INFO - Polling stopped
+2025-04-17 01:41:28,126 - aiogram.dispatcher - INFO - Polling stopped for bot @FLEX_ELD_BOT id=7968006353 - 'FLEX_ELD'
+2025-04-17 01:41:45,028 - __main__ - INFO - База данных подключена
+2025-04-17 01:41:46,015 - __main__ - INFO - Миграция для добавления столбца language выполнена
+2025-04-17 01:41:46,504 - __main__ - INFO - Обновлены существующие записи с language = NULL
+2025-04-17 01:41:46,991 - __main__ - INFO - Таблицы созданы и миграции применены
+2025-04-17 01:41:47,393 - aiogram.dispatcher - INFO - Start polling
+2025-04-17 01:41:47,500 - aiogram.dispatcher - INFO - Run polling for bot @FLEX_ELD_BOT id=7968006353 - 'FLEX_ELD'
+2025-04-17 01:41:59,529 - __main__ - INFO - Driver data: <Record id=1 driver_id=1263471738 company='Re' full_name='Jdjd' phone='+1929199291' truck_number='818' created_at=datetime.datetime(2025, 3, 21, 19, 32, 27, 458621) language='ru'>
+2025-04-17 01:41:59,936 - aiogram.event - INFO - Update id=451430385 is handled. Duration 1141 ms by bot id=7968006353
+2025-04-17 01:42:10,684 - __main__ - ERROR - Ошибка создания задачи: Telegram server says - Bad Request: chat not found
+2025-04-17 01:42:10,811 - aiogram.event - INFO - Update id=451430386 is handled. Duration 2194 ms by bot id=7968006353
+2025-04-17 01:42:29,078 - aiogram.dispatcher - INFO - Polling stopped
+2025-04-17 01:42:29,340 - aiogram.dispatcher - INFO - Polling stopped for bot @FLEX_ELD_BOT id=7968006353 - 'FLEX_ELD'
+2025-04-17 01:55:03,305 - __main__ - INFO - Database connected
+2025-04-17 01:55:04,793 - __main__ - INFO - Tables created
+2025-04-17 01:55:05,244 - aiogram.dispatcher - INFO - Start polling
+2025-04-17 01:55:05,369 - aiogram.dispatcher - INFO - Run polling for bot @FLEX_ELD_BOT id=7968006353 - 'FLEX_ELD'
+2025-04-17 01:55:18,768 - aiogram.event - INFO - Update id=451430387 is handled. Duration 1130 ms by bot id=7968006353
+2025-04-17 01:55:26,125 - __main__ - ERROR - Error creating task: Telegram server says - Bad Request: chat not found
+2025-04-17 01:55:26,319 - aiogram.event - INFO - Update id=451430388 is handled. Duration 2319 ms by bot id=7968006353
+2025-04-17 02:05:27,893 - aiogram.dispatcher - INFO - Polling stopped
+2025-04-17 02:05:28,157 - __main__ - INFO - Database pool closed
+2025-04-17 02:05:28,158 - aiogram.dispatcher - INFO - Polling stopped for bot @FLEX_ELD_BOT id=7968006353 - 'FLEX_ELD'
+2025-04-17 02:08:07,345 - __main__ - INFO - Database connected
+2025-04-17 02:08:08,783 - __main__ - INFO - Tables created
+2025-04-17 02:08:09,233 - aiogram.dispatcher - INFO - Start polling
+2025-04-17 02:08:09,348 - aiogram.dispatcher - INFO - Run polling for bot @FLEX_ELD_BOT id=7968006353 - 'FLEX_ELD'
+2025-04-17 02:08:36,752 - aiogram.event - INFO - Update id=451430389 is handled. Duration 1131 ms by bot id=7968006353
+2025-04-17 02:08:44,827 - __main__ - ERROR - Error creating task: Telegram server says - Bad Request: chat not found
+2025-04-17 02:08:44,962 - aiogram.event - INFO - Update id=451430390 is handled. Duration 2173 ms by bot id=7968006353
+2025-04-17 02:13:12,612 - __main__ - ERROR - Error creating task: Telegram server says - Bad Request: chat not found
+2025-04-17 02:13:12,737 - aiogram.event - INFO - Update id=451430391 is handled. Duration 1692 ms by bot id=7968006353
+2025-04-17 02:16:23,046 - aiogram.dispatcher - INFO - Polling stopped
+2025-04-17 02:16:23,204 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [Errno 1] [SSL: APPLICATION_DATA_AFTER_CLOSE_NOTIFY] application data after close notify (_ssl.c:2706)
+2025-04-17 02:16:23,204 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7968006353)
+2025-04-17 02:16:23,547 - __main__ - INFO - Database pool closed
+2025-04-17 02:16:23,548 - aiogram.dispatcher - INFO - Polling stopped for bot @FLEX_ELD_BOT id=7968006353 - 'FLEX_ELD'
