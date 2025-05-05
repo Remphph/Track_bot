@@ -150,14 +150,14 @@ async def create_task(message: types.Message):
 
         await bot.send_message(
             Config.MANAGER_GROUP_ID,
-            f"📩 New Task #{task_id} from {driver['full_name']} ({driver['company']}):\n"
+            f"📩 New Task from {driver['full_name']} ({driver['company']}):\n"
             f"Type: {task_type}",
             reply_markup=types.InlineKeyboardMarkup(
                 inline_keyboard=[[types.InlineKeyboardButton(text="Take Task", callback_data=f"take_{task_id}")]]
             )
         )
 
-        await message.answer("We are working on your log book Pls wait")
+        await message.answer("We are working on your log book. Please wait.")
     except Exception as e:
         logger.error(f"Task creation error: {e}")
         await message.answer("An error occurred. Please try again later.")
@@ -167,26 +167,43 @@ async def create_task(message: types.Message):
 async def take_task(callback: types.CallbackQuery):
     task_id = int(callback.data.split("_")[1])
     manager_id = callback.from_user.id
-
     try:
-        await update_task(task_id, status="in_progress", manager_id=manager_id)
-        task = await fetchrow("SELECT * FROM tasks WHERE task_id = $1", task_id)
-        driver_info = await fetchrow("SELECT full_name, company FROM drivers WHERE driver_id = $1", task['driver_id'])
+            async with pool.acquire() as conn:
+                task = await conn.fetchrow("SELECT task_type, status, bol_number, trailer_number FROM tasks WHERE task_id = $1", task_id)
+                if not task:
+                    await callback.message.answer("Task not found.")
+                    return
+                text_fields = [task['task_type'], task['status'], task['bol_number'] or '', task['trailer_number'] or '']
+                if any(x in field.lower() for field in text_fields for x in ["vpn", "http", "arturshi", "🔒", "🔥"]):
+                    logger.warning(f"Ignored task with potential spam: {text_fields}")
+                    await callback.message.answer("This task is not available.")
+                    return
+                if task['status'] != 'created':
+                    await callback.message.answer("Task is already taken or completed.")
+                    return
+                await conn.execute(
+                    "UPDATE tasks SET status = 'in_progress', manager_id = $1 WHERE task_id = $2",
+                    manager_id, task_id
+                )
+                task = await conn.fetchrow("SELECT * FROM tasks WHERE task_id = $1", task_id)
+                driver_info = await conn.fetchrow("SELECT full_name, company FROM drivers WHERE driver_id = $1", task['driver_id'])
 
-        await bot.edit_message_text(
-            chat_id=Config.MANAGER_GROUP_ID,
-            message_id=callback.message.message_id,
-            text=f"📩 Task #{task_id} (Taken by {callback.from_user.full_name}):\n"
-                 f"Type: {task['task_type']}\n"
-                 f"Driver: {driver_info['full_name']} ({driver_info['company']})",
-            reply_markup=types.InlineKeyboardMarkup(
-                inline_keyboard=[[types.InlineKeyboardButton(text="Complete", callback_data=f"finish_{task_id}")]]
-            )
-        )
+                await bot.edit_message_text(
+                    chat_id=Config.MANAGER_GROUP_ID,
+                    message_id=callback.message.message_id,
+                    text=f"📩 Task taken by {callback.from_user.full_name}:\n"
+                         f"Type: {task['task_type']}\n"
+                         f"Driver: {driver_info['full_name']} ({driver_info['company']})",
+                    reply_markup=types.InlineKeyboardMarkup(
+                        inline_keyboard=[[types.InlineKeyboardButton(text="Complete", callback_data=f"finish_{task_id}")]]
+                    )
+                )
 
-        await bot.send_message(task['driver_id'],
-                               f"Your task #{task_id} has been taken by {callback.from_user.full_name}!")
-        await callback.answer("Task taken!")
+                await bot.send_message(
+                    task['driver_id'],
+                    f"Your task ({task['task_type']}) has been taken by {callback.from_user.full_name}!"
+                )
+                await callback.answer("Task taken!")
     except Exception as e:
         logger.error(f"Task take error: {e}")
         await callback.answer("An error occurred", show_alert=True)
@@ -196,25 +213,27 @@ async def take_task(callback: types.CallbackQuery):
 async def finish_task(callback: types.CallbackQuery):
     task_id = int(callback.data.split("_")[1])
     manager_id = callback.from_user.id
-
     try:
         task = await fetchrow("SELECT * FROM tasks WHERE task_id = $1", task_id)
         if task['manager_id'] != manager_id:
             await callback.answer("You cannot complete someone else's task")
             return
+        driver_info = await fetchrow("SELECT full_name, company FROM drivers WHERE driver_id = $1", task['driver_id'])
 
         await update_task(task_id, status="completed")
 
         await bot.edit_message_text(
             chat_id=Config.MANAGER_GROUP_ID,
             message_id=callback.message.message_id,
-            text=f"📩 Task #{task_id} completed by {callback.from_user.full_name}",
+            text=f"📩 Task completed by {callback.from_user.full_name}:\n"
+                 f"Type: {task['task_type']}\n"
+                 f"Driver: {driver_info['full_name']} ({driver_info['company']})",
             reply_markup=None
         )
 
         await bot.send_message(
             task['driver_id'],
-            f"Pls Update Have a safe trip"
+            f"Your task ({task['task_type']}) has been completed by {callback.from_user.full_name}. Have a safe trip!"
         )
         await callback.answer("Task completed!", show_alert=True)
     except Exception as e:
@@ -243,8 +262,7 @@ async def process_task_id(message: types.Message, state: FSMContext):
     task_id = int(task_id_str)
     task = await fetchrow(
         "SELECT * FROM tasks WHERE task_id = $1 AND driver_id = $2 AND status = 'in_progress'",
-        task_id,
-        message.from_user.id
+        task_id, message.from_user.id
     )
 
     if not task:
@@ -275,6 +293,10 @@ async def process_trailer(message: types.Message, state: FSMContext):
         task_id = data["task_id"]
         bol = data["bol"]
         trailer = message.text.strip()
+        if any(x in trailer.lower() for x in ["vpn", "http", "arturshi", "🔒", "🔥"]):
+            logger.warning(f"Blocked spam in trailer: {trailer}")
+            await message.answer("Invalid trailer number. Please try again.")
+            return
 
         await update_task(task_id, bol_number=bol, trailer_number=trailer)
         await state.clear()
@@ -287,7 +309,8 @@ async def process_trailer(message: types.Message, state: FSMContext):
         if manager_info and manager_info['manager_id']:
             await bot.send_message(
                 manager_info['manager_id'],
-                f"📩 Task #{task_id} update:\n"
+                f"📩 Task update:\n"
+                f"Type: {task['task_type']}\n"
                 f"BOL: {bol}\n"
                 f"Trailer: {trailer}"
             )
@@ -311,7 +334,7 @@ async def check_task_status(message: types.Message):
     for task in tasks:
         status_emoji = "⏳" if task['status'] == 'in_progress' else "✅"
         await message.answer(
-            f"Task #{task['task_id']}:\n"
+            f"Task:\n"
             f"Type: {task['task_type']}\n"
             f"Status: {status_emoji} {task['status']}\n"
             f"BOL: {task['bol_number'] or 'Not provided'}\n"
@@ -325,7 +348,8 @@ async def cmd_start(message: types.Message, state: FSMContext):
         "Welcome to our team!\n"
         "We work 24/7 🕐\n"
         "Let us know if you have any questions or need some help with ELD.\n"
-        "We are always glad to help you! 📲"
+        "We are always glad to help you! 📲",
+        reply_markup=get_main_menu()
     )
 
     current_state = await state.get_state()
@@ -349,7 +373,12 @@ async def cancel_registration(message: types.Message, state: FSMContext):
         await state.clear()
         await message.answer("Action cancelled", reply_markup=get_main_menu())
     else:
-        await message.answer("No active actions")
+        await message.answer("No active actions", reply_markup=get_main_menu())
+
+
+@dp.message(F.text == "/menu")
+async def cmd_menu(message: types.Message):
+    await message.answer("Main menu", reply_markup=get_main_menu())
 
 
 @dp.message(F.text == "⚙️ Settings")
@@ -497,7 +526,10 @@ async def back_to_main_menu(message: types.Message):
 
 @dp.message()
 async def handle_unknown(message: types.Message):
-    await message.answer("Please use the menu to select an action.")
+    if any(x in message.text.lower() for x in ["vpn", "http", "arturshi", "🔒", "🔥"]):
+        logger.warning(f"Blocked spam from {message.from_user.id}: {message.text}")
+        return
+    await message.answer("Please use the menu to select an action.", reply_markup=get_main_menu())
 
 
 async def on_startup():
