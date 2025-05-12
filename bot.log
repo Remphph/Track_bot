@@ -17977,3 +17977,13 @@ KeyError: 'language'
 2025-04-17 02:16:23,204 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7968006353)
 2025-04-17 02:16:23,547 - __main__ - INFO - Database pool closed
 2025-04-17 02:16:23,548 - aiogram.dispatcher - INFO - Polling stopped for bot @FLEX_ELD_BOT id=7968006353 - 'FLEX_ELD'
+2025-05-05 21:48:11,560 - __main__ - INFO - Database connected
+2025-05-05 21:48:12,843 - __main__ - INFO - Tables created
+2025-05-05 21:48:13,375 - aiogram.dispatcher - INFO - Start polling
+2025-05-05 21:48:13,555 - aiogram.dispatcher - INFO - Run polling for bot @FlexEld_bot id=7583120755 - 'Flex_Eld'
+2025-05-05 21:48:17,931 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 21:48:17,932 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7583120755)
+2025-05-05 21:48:23,645 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 21:48:23,645 - aiogram.dispatcher - WARNING - Sleep for 1.352598 seconds and try again... (tryings = 1, bot id = 7583120755)
+2025-05-05 21:48:26,432 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-05 21:48:26,689 - aiogram.dispatcher - INFO - Polling stopped for bot @FlexEld_bot id=7583120755 - 'Flex_Eld'

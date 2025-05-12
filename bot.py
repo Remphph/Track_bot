@@ -20,17 +20,14 @@ logger = logging.getLogger(__name__)
 # Load environment variables
 load_dotenv("Bot.env")
 
-
 class Config:
     BOT_TOKEN = os.getenv("BOT_TOKEN")
     DATABASE_URL = os.getenv("DATABASE_URL")
     MANAGER_GROUP_ID = int(os.getenv("MANAGER_GROUP_ID"))
 
-
 bot = Bot(token=Config.BOT_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
 pool = None
-
 
 # FSM States
 class DriverStates(StatesGroup):
@@ -46,11 +43,9 @@ class DriverStates(StatesGroup):
     SEND_BOL = State()
     SEND_TRAILER = State()
 
-
 # Validation patterns
 PHONE_PATTERN = re.compile(r'^\+?[1-9]\d{9,14}$')
 BOL_PATTERN = re.compile(r'^\d{8,12}$')
-
 
 async def init_db():
     global pool
@@ -61,21 +56,17 @@ async def init_db():
         logger.error(f"Database connection error: {e}")
         raise
 
-
 async def execute(query: str, *args):
     async with pool.acquire() as conn:
         return await conn.execute(query, *args)
-
 
 async def fetch(query: str, *args):
     async with pool.acquire() as conn:
         return await conn.fetch(query, *args)
 
-
 async def fetchrow(query: str, *args):
     async with pool.acquire() as conn:
         return await conn.fetchrow(query, *args)
-
 
 async def setup_db():
     await execute(r'''
@@ -104,7 +95,6 @@ async def setup_db():
         ''')
     logger.info("Tables created")
 
-
 async def update_task(task_id, **kwargs):
     set_clauses = ', '.join(f"{k} = ${i + 1}" for i, k in enumerate(kwargs.keys()))
     await execute(
@@ -113,6 +103,16 @@ async def update_task(task_id, **kwargs):
         task_id
     )
 
+async def clean_old_tasks():
+    while True:
+        try:
+            deleted = await execute(
+                "DELETE FROM tasks WHERE created_at < NOW() - INTERVAL '7 days'"
+            )
+            logger.info(f"Cleaning old tasks: deleted {deleted} tasks")
+        except Exception as e:
+            logger.error(f"Error cleaning old tasks: {e}")
+        await asyncio.sleep(24 * 60 * 60)  # Run every 24 hours
 
 def get_main_menu():
     return types.ReplyKeyboardMarkup(
@@ -120,11 +120,11 @@ def get_main_menu():
             [types.KeyboardButton(text="New Shift"), types.KeyboardButton(text="New Cycle")],
             [types.KeyboardButton(text="Reset Break"), types.KeyboardButton(text="Add Time")],
             [types.KeyboardButton(text="Check"), types.KeyboardButton(text="Load")],
-            [types.KeyboardButton(text="Contact Me"), types.KeyboardButton(text="⚙️ Settings")]
+            [types.KeyboardButton(text="Contact Me"), types.KeyboardButton(text="PTI")],
+            [types.KeyboardButton(text="⚙️ Settings")]
         ],
         resize_keyboard=True
     )
-
 
 def settings_menu():
     return types.ReplyKeyboardMarkup(
@@ -135,8 +135,7 @@ def settings_menu():
         resize_keyboard=True
     )
 
-
-@dp.message(F.text.in_(["New Shift", "New Cycle", "Reset Break", "Add Time", "Check", "Load", "Contact Me"]))
+@dp.message(F.text.in_(["New Shift", "New Cycle", "Reset Break", "Add Time", "Check", "Load", "Contact Me", "PTI"]))
 async def create_task(message: types.Message):
     driver = await fetchrow("SELECT * FROM drivers WHERE driver_id = $1", message.from_user.id)
     if not driver:
@@ -162,52 +161,50 @@ async def create_task(message: types.Message):
         logger.error(f"Task creation error: {e}")
         await message.answer("An error occurred. Please try again later.")
 
-
 @dp.callback_query(F.data.startswith("take_"))
 async def take_task(callback: types.CallbackQuery):
     task_id = int(callback.data.split("_")[1])
     manager_id = callback.from_user.id
     try:
-            async with pool.acquire() as conn:
-                task = await conn.fetchrow("SELECT task_type, status, bol_number, trailer_number FROM tasks WHERE task_id = $1", task_id)
-                if not task:
-                    await callback.message.answer("Task not found.")
-                    return
-                text_fields = [task['task_type'], task['status'], task['bol_number'] or '', task['trailer_number'] or '']
-                if any(x in field.lower() for field in text_fields for x in ["vpn", "http", "arturshi", "🔒", "🔥"]):
-                    logger.warning(f"Ignored task with potential spam: {text_fields}")
-                    await callback.message.answer("This task is not available.")
-                    return
-                if task['status'] != 'created':
-                    await callback.message.answer("Task is already taken or completed.")
-                    return
-                await conn.execute(
-                    "UPDATE tasks SET status = 'in_progress', manager_id = $1 WHERE task_id = $2",
-                    manager_id, task_id
-                )
-                task = await conn.fetchrow("SELECT * FROM tasks WHERE task_id = $1", task_id)
-                driver_info = await conn.fetchrow("SELECT full_name, company FROM drivers WHERE driver_id = $1", task['driver_id'])
+        async with pool.acquire() as conn:
+            task = await conn.fetchrow("SELECT task_type, status, bol_number, trailer_number FROM tasks WHERE task_id = $1", task_id)
+            if not task:
+                await callback.message.answer("Task not found.")
+                return
+            text_fields = [task['task_type'], task['status'], task['bol_number'] or '', task['trailer_number'] or '']
+            if any(x in field.lower() for field in text_fields for x in ["vpn", "http", "arturshi", "🔒", "🔥"]):
+                logger.warning(f"Ignored task with potential spam: {text_fields}")
+                await callback.message.answer("This task is not available.")
+                return
+            if task['status'] != 'created':
+                await callback.message.answer("Task is already taken or completed.")
+                return
+            await conn.execute(
+                "UPDATE tasks SET status = 'in_progress', manager_id = $1 WHERE task_id = $2",
+                manager_id, task_id
+            )
+            task = await conn.fetchrow("SELECT * FROM tasks WHERE task_id = $1", task_id)
+            driver_info = await conn.fetchrow("SELECT full_name, company FROM drivers WHERE driver_id = $1", task['driver_id'])
 
-                await bot.edit_message_text(
-                    chat_id=Config.MANAGER_GROUP_ID,
-                    message_id=callback.message.message_id,
-                    text=f"📩 Task taken by {callback.from_user.full_name}:\n"
-                         f"Type: {task['task_type']}\n"
-                         f"Driver: {driver_info['full_name']} ({driver_info['company']})",
-                    reply_markup=types.InlineKeyboardMarkup(
-                        inline_keyboard=[[types.InlineKeyboardButton(text="Complete", callback_data=f"finish_{task_id}")]]
-                    )
+            await bot.edit_message_text(
+                chat_id=Config.MANAGER_GROUP_ID,
+                message_id=callback.message.message_id,
+                text=f"📩 Task taken by {callback.from_user.full_name}:\n"
+                     f"Type: {task['task_type']}\n"
+                     f"Driver: {driver_info['full_name']} ({driver_info['company']})",
+                reply_markup=types.InlineKeyboardMarkup(
+                    inline_keyboard=[[types.InlineKeyboardButton(text="Complete", callback_data=f"finish_{task_id}")]]
                 )
+            )
 
-                await bot.send_message(
-                    task['driver_id'],
-                    f"Your task ({task['task_type']}) has been taken by {callback.from_user.full_name}!"
-                )
-                await callback.answer("Task taken!")
+            await bot.send_message(
+                task['driver_id'],
+                f"Your task ({task['task_type']}) has been taken by {callback.from_user.full_name}!"
+            )
+            await callback.answer("Task taken!")
     except Exception as e:
         logger.error(f"Task take error: {e}")
         await callback.answer("An error occurred", show_alert=True)
-
 
 @dp.callback_query(F.data.startswith("finish_"))
 async def finish_task(callback: types.CallbackQuery):
@@ -233,13 +230,12 @@ async def finish_task(callback: types.CallbackQuery):
 
         await bot.send_message(
             task['driver_id'],
-            f"Your task ({task['task_type']}) has been completed by {callback.from_user.full_name}. Have a safe trip!"
+            f"✅ Done! Your {task['task_type'].lower()} has been processed by {callback.from_user.full_name}. Please update your logs. Have a safe trip! 🌟"
         )
         await callback.answer("Task completed!", show_alert=True)
     except Exception as e:
         logger.error(f"Task completion error: {e}")
         await callback.answer("An error occurred", show_alert=True)
-
 
 @dp.message(F.text == "Send Data")
 async def start_send_data(message: types.Message, state: FSMContext):
@@ -250,7 +246,6 @@ async def start_send_data(message: types.Message, state: FSMContext):
 
     await message.answer("Enter task number:")
     await state.set_state(DriverStates.SEND_TASK_ID)
-
 
 @dp.message(DriverStates.SEND_TASK_ID)
 async def process_task_id(message: types.Message, state: FSMContext):
@@ -273,7 +268,6 @@ async def process_task_id(message: types.Message, state: FSMContext):
     await message.answer("Enter BOL number:")
     await state.set_state(DriverStates.SEND_BOL)
 
-
 @dp.message(DriverStates.SEND_BOL)
 async def process_bol(message: types.Message, state: FSMContext):
     bol = message.text.strip()
@@ -284,7 +278,6 @@ async def process_bol(message: types.Message, state: FSMContext):
     await state.update_data(bol=bol)
     await message.answer("Enter trailer number:")
     await state.set_state(DriverStates.SEND_TRAILER)
-
 
 @dp.message(DriverStates.SEND_TRAILER)
 async def process_trailer(message: types.Message, state: FSMContext):
@@ -318,7 +311,6 @@ async def process_trailer(message: types.Message, state: FSMContext):
         logger.error(f"Task data update error: {e}")
         await message.answer("An error occurred. Please try again later.")
 
-
 @dp.message(F.text == "Check Status")
 async def check_task_status(message: types.Message):
     driver_id = message.from_user.id
@@ -340,7 +332,6 @@ async def check_task_status(message: types.Message):
             f"BOL: {task['bol_number'] or 'Not provided'}\n"
             f"Trailer: {task['trailer_number'] or 'Not provided'}"
         )
-
 
 @dp.message(F.text == "/start")
 async def cmd_start(message: types.Message, state: FSMContext):
@@ -365,7 +356,6 @@ async def cmd_start(message: types.Message, state: FSMContext):
         await message.answer("Registration:\n\nEnter company name:", reply_markup=types.ReplyKeyboardRemove())
         await state.set_state(DriverStates.REG_COMPANY)
 
-
 @dp.message(F.text == "/cancel")
 async def cancel_registration(message: types.Message, state: FSMContext):
     current_state = await state.get_state()
@@ -375,11 +365,9 @@ async def cancel_registration(message: types.Message, state: FSMContext):
     else:
         await message.answer("No active actions", reply_markup=get_main_menu())
 
-
 @dp.message(F.text == "/menu")
 async def cmd_menu(message: types.Message):
     await message.answer("Main menu", reply_markup=get_main_menu())
-
 
 @dp.message(F.text == "⚙️ Settings")
 async def settings(message: types.Message):
@@ -390,12 +378,10 @@ async def settings(message: types.Message):
 
     await message.answer("Select an action:", reply_markup=settings_menu())
 
-
 @dp.message(F.text == "Edit Profile")
 async def edit_data(message: types.Message, state: FSMContext):
     await message.answer("Enter new company name:", reply_markup=types.ReplyKeyboardRemove())
     await state.set_state(DriverStates.EDIT_COMPANY)
-
 
 @dp.message(DriverStates.REG_COMPANY)
 async def process_company(message: types.Message, state: FSMContext):
@@ -408,7 +394,6 @@ async def process_company(message: types.Message, state: FSMContext):
     await message.answer("Enter your full name:")
     await state.set_state(DriverStates.REG_FULL_NAME)
 
-
 @dp.message(DriverStates.REG_FULL_NAME)
 async def process_full_name(message: types.Message, state: FSMContext):
     full_name = message.text.strip()
@@ -420,7 +405,6 @@ async def process_full_name(message: types.Message, state: FSMContext):
     await message.answer("Enter phone number (e.g., +71234567890):")
     await state.set_state(DriverStates.REG_PHONE)
 
-
 @dp.message(DriverStates.REG_PHONE)
 async def process_phone(message: types.Message, state: FSMContext):
     phone = message.text.strip()
@@ -431,7 +415,6 @@ async def process_phone(message: types.Message, state: FSMContext):
     await state.update_data(phone=phone)
     await message.answer("Enter truck number:")
     await state.set_state(DriverStates.REG_TRUCK)
-
 
 @dp.message(DriverStates.REG_TRUCK)
 async def process_truck(message: types.Message, state: FSMContext):
@@ -457,7 +440,6 @@ async def process_truck(message: types.Message, state: FSMContext):
         logger.error(f"Registration error: {e}")
         await message.answer("An error occurred. Please try again later.")
 
-
 @dp.message(DriverStates.EDIT_COMPANY)
 async def process_edit_company(message: types.Message, state: FSMContext):
     company = message.text.strip()
@@ -468,7 +450,6 @@ async def process_edit_company(message: types.Message, state: FSMContext):
     await state.update_data(company=company)
     await message.answer("Enter new full name:")
     await state.set_state(DriverStates.EDIT_FULL_NAME)
-
 
 @dp.message(DriverStates.EDIT_FULL_NAME)
 async def process_edit_full_name(message: types.Message, state: FSMContext):
@@ -481,7 +462,6 @@ async def process_edit_full_name(message: types.Message, state: FSMContext):
     await message.answer("Enter new phone number:")
     await state.set_state(DriverStates.EDIT_PHONE)
 
-
 @dp.message(DriverStates.EDIT_PHONE)
 async def process_edit_phone(message: types.Message, state: FSMContext):
     phone = message.text.strip()
@@ -492,7 +472,6 @@ async def process_edit_phone(message: types.Message, state: FSMContext):
     await state.update_data(phone=phone)
     await message.answer("Enter new truck number:")
     await state.set_state(DriverStates.EDIT_TRUCK)
-
 
 @dp.message(DriverStates.EDIT_TRUCK)
 async def process_edit_truck(message: types.Message, state: FSMContext):
@@ -518,11 +497,9 @@ async def process_edit_truck(message: types.Message, state: FSMContext):
         logger.error(f"Profile update error: {e}")
         await message.answer("An error occurred. Please try again later.")
 
-
 @dp.message(F.text == "Back")
 async def back_to_main_menu(message: types.Message):
     await message.answer("Main menu", reply_markup=get_main_menu())
-
 
 @dp.message()
 async def handle_unknown(message: types.Message):
@@ -531,17 +508,15 @@ async def handle_unknown(message: types.Message):
         return
     await message.answer("Please use the menu to select an action.", reply_markup=get_main_menu())
 
-
 async def on_startup():
     await init_db()
     await setup_db()
     await bot.delete_webhook()
-
+    asyncio.create_task(clean_old_tasks())
 
 async def main():
     await on_startup()
     await dp.start_polling(bot)
-
 
 if __name__ == "__main__":
     asyncio.run(main())
